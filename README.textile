@@ -15,7 +15,7 @@ h3. Protocolo de Mensaje
 
 El protocolo se ha estandarizado. Todos los mensajes que se envían tienen la siguiente estructura:
 
-[4 numeros iniciales que corresponden al id del que envía el mensaje]_[1 numero que indica que tipo de mensaje se está enviando]_[cuerpo del mensaje]
+[4 numeros iniciales que corresponden al id del que envía el mensaje]_ [1 numero que indica que tipo de mensaje se está enviando] _[cuerpo del mensaje]
 
 Los tipos de mensaje son los siguientes:
 * 0 - Solicitar llegada a una red. Se le manda a todos los puertos para ver si hay alguien en algun puerto. En caso de que no haya nadie, se une como primer nodo de la red.
