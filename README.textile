@@ -6,10 +6,10 @@ h3. Cambios
 
 Se han realizado varios cambios a la tarea anterior. Estos son los que siguen:
 
-*En primer lugar se cambio el nombre de la clase principal de "Nodo" a "Comunication", que tiene más sentido ya que es un componente y no simplemente una clase
-*El sistema de comunicación ya no es secuencial, sino que cada nodo guarda la información de los demás nodos en una lista.
-*Cada vez que un nodo se conecta a la red, actualiza la lista de todos los demás nodos para avisarles que el se ha unido
-*Existe un único método para enviar mensajes llamado "sendMessage(string mensaje, int destino)"
+* En primer lugar se cambio el nombre de la clase principal de "Nodo" a "Comunication", que tiene más sentido ya que es un componente y no simplemente una clase
+* El sistema de comunicación ya no es secuencial, sino que cada nodo guarda la información de los demás nodos en una lista.
+* Cada vez que un nodo se conecta a la red, actualiza la lista de todos los demás nodos para avisarles que el se ha unido
+* Existe un único método para enviar mensajes llamado "sendMessage(string mensaje, int destino)"
 
 h3. Protocolo de Mensaje
 
@@ -18,10 +18,10 @@ El protocolo se ha estandarizado. Todos los mensajes que se envían tienen la si
 [4 numeros iniciales que corresponden al id del que envía el mensaje]_[1 numero que indica que tipo de mensaje se está enviando]_[cuerpo del mensaje]
 
 Los tipos de mensaje son los siguientes:
-*0 - Solicitar llegada a una red. Se le manda a todos los puertos para ver si hay alguien en algun puerto. En caso de que no haya nadie, se une como primer nodo de la red.
-*1 - LLegada Aceptada. Si existe algún nodo al momento de conectarse otro, entonces al recibir un mensaje del tipo "Solicitar Llegada" este debe responder con un 1.
-*2 - Mensaje normal. El receptor lo recibe y lo imprime
-*3 - Update list. Es el mensaje que se envía a los demás para que actualicen sus listas. El cuerpo del mensaje es un string con los ids de los nodos que están en la lista, separados por coma.
+* 0 - Solicitar llegada a una red. Se le manda a todos los puertos para ver si hay alguien en algun puerto. En caso de que no haya nadie, se une como primer nodo de la red.
+* 1 - LLegada Aceptada. Si existe algún nodo al momento de conectarse otro, entonces al recibir un mensaje del tipo "Solicitar Llegada" este debe responder con un 1.
+* 2 - Mensaje normal. El receptor lo recibe y lo imprime
+* 3 - Update list. Es el mensaje que se envía a los demás para que actualicen sus listas. El cuerpo del mensaje es un string con los ids de los nodos que están en la lista, separados por coma.
 
 Ej: 6003_3_6003,6004,6007,6013,6018
 
