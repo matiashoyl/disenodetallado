@@ -30,7 +30,6 @@ public class Comunication implements Runnable
 				if(testPort("0",i))
 				{
 					flag=true;
-					updateEveryonesList();
 					break;
 				}
 			}
@@ -38,7 +37,10 @@ public class Comunication implements Runnable
 		if(flag)
 			System.out.println("Nodo "+id+" te has conectado exitosamente a la red");
 		else
+		{
+			nodos.add(id);
 			System.out.println("Eres el primero en la red");
+		}
 	}
 
 	public void updateEveryonesList() throws Exception
@@ -46,7 +48,9 @@ public class Comunication implements Runnable
 		Iterator<Integer> i = nodos.iterator();
 		while(i.hasNext())
 		{
-			sendMessage("_3_"+listaNodosToString(),i.next());
+			String mensaje = "3_"+listaNodosToString();
+			int next = i.next();
+			sendMessage(mensaje,next);
 		}
 	}
 
@@ -70,21 +74,26 @@ public class Comunication implements Runnable
 
 	public void sendMessage(String Message, int idDestino) throws Exception
 	{
-		try
+		if(nodos.contains(idDestino))
 		{
-			Socket clientSocket = new Socket("127.0.0.1", idDestino);
+			try
+			{
+				Socket clientSocket = new Socket("127.0.0.1", idDestino);
 
-			DataOutputStream outToServer = 
-					new DataOutputStream(clientSocket.getOutputStream());
+				DataOutputStream outToServer = 
+						new DataOutputStream(clientSocket.getOutputStream());
 
-			outToServer.writeBytes(id+"_"+Message);		
+				outToServer.writeBytes(id+"_"+Message);		
 
-			clientSocket.close(); 
+				clientSocket.close(); 
+			}
+			catch(ConnectException e)
+			{
+				System.out.println("No fue posible enviar el mensaje");
+			}
 		}
-		catch(ConnectException e)
-		{
-			System.out.println("No fue posible enviar el mensaje");
-		}
+		else
+			System.out.println("El nodo "+idDestino+" no está conectado");
 	}
 
 	public boolean testPort(String Message, int idDestino) throws Exception
@@ -152,6 +161,14 @@ public class Comunication implements Runnable
 		}
 	}
 
+
+	public void desconection() throws Exception
+	{
+		nodos.remove(id);
+		updateEveryonesList();
+		System.exit(0);
+	}
+
 	public void run()
 	{
 		try
@@ -176,10 +193,19 @@ public class Comunication implements Runnable
 							System.out.println("Se ha agregado el nodo "+nuevoID+" a la red");
 						}
 
+						//Me responden la solicitud de llegada
+						if(clientSentence.substring(5, 6).compareTo("1") == 0)
+						{	
+							System.out.println("Te has unido a "+clientSentence.substring(0,4));
+							getListaNodos(clientSentence.substring(7));
+							nodos.add(id);
+							updateEveryonesList();
+						}
+
 						//Mensaje normal
 						else if(clientSentence.substring(5, 6).compareTo("2") == 0)
 						{	
-							System.out.println(clientSentence.substring(7));
+							System.out.println("From "+clientSentence.substring(0, 4)+": "+clientSentence.substring(7));
 						}
 
 						//Update de la lista
