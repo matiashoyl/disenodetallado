@@ -171,7 +171,6 @@ public class Comunication implements Runnable
 							sendMessage("1"+"_"+listaNodosToString(), nuevoID); //1 = Llegada Aceptada
 							System.out.println("Se ha agregado el nodo "+nuevoID+" a la red");
 						}
-
 						//[Llegada aceptada] Me responden la solicitud de llegada
 						if(clientSentence.substring(5, 6).compareTo("1") == 0)
 						{	
@@ -180,13 +179,11 @@ public class Comunication implements Runnable
 							nodos.add(id);
 							updateEveryonesList();
 						}
-
 						//[Mensaje normal] Lo imprime en consola
 						else if(clientSentence.substring(5, 6).compareTo("2") == 0)
 						{	
 							System.out.println("From "+clientSentence.substring(0, 4)+": "+clientSentence.substring(7));
 						}
-
 						//[Update de la lista] Invoca el metodo pertinente
 						else if(clientSentence.substring(5, 6).compareTo("3") == 0)
 						{	
@@ -194,7 +191,6 @@ public class Comunication implements Runnable
 						}
 					}
 				}
-
 				catch(IllegalArgumentException e)
 				{
 					System.out.println("Error en el formato del mensaje");
@@ -206,5 +202,4 @@ public class Comunication implements Runnable
 			System.out.println("Error al recibir el mensaje");
 		}
 	}
-
 }
