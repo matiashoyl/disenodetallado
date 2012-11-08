@@ -81,7 +81,7 @@ public class Comunication implements Runnable
 	public void sendMessage(String Message, int idDestino) throws Exception
 	{
 		//Si el nodo de destino esta dentro de la lista de nodos...
-		if(nodos.contains(idDestino))
+		if(nodos.contains(idDestino)||Message.substring(0, 1).compareTo("1") == 0)
 		{
 			try
 			{
