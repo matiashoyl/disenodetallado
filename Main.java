@@ -15,35 +15,55 @@ public class Main {
 			 * y lo envia al nodo especificado a traves del metodo
 			 * senMessage (Para probar se debe descomentar y comentar el resto)
 			 */
-			BufferedReader inFromUser = 
+			/*BufferedReader inFromUser = 
 					new BufferedReader(new InputStreamReader(System.in));
 
 			String sentenceConsole = inFromUser.readLine();
 			
 			c.sendMessage("2_"+sentenceConsole, 6003);
-			
+			*/
 			
 			/* Prueba para probar como se envian los objetos
 			 *  (Para probar se debe descomentar y comentar el resto)
 			 */
-			/*
 			BufferedReader inFromUser = 
 					new BufferedReader(new InputStreamReader(System.in));
 
 			String sentenceConsole = inFromUser.readLine();
 			
-			if(sentenceConsole.equalsIgnoreCase("enviar"))
+			/* Posibles tests:
+			 * enviarLarry
+			 * enviarMaria
+			 * recibirNombre
+			 * recibirEdad
+			 * recibirSexo
+			 */
+			if(sentenceConsole.equalsIgnoreCase("enviarLarry"))
 			{
-				MyTest test = new MyTest();
-				c.sendObject(test, 6003);
+				Persona persona = new Persona("Larry",34,"Masculino");
+				c.sendObject(persona, 6003);
 			}
-			else if(sentenceConsole.equalsIgnoreCase("recibir"))
+			else if(sentenceConsole.equalsIgnoreCase("enviarMaria"))
 			{
-				MyTest test = (MyTest)c.getObject();
-				System.out.println("Si el numero es 60, entonces esta funcionando.");
-				System.out.println("Numero: "+test.getNumero());
+				Persona persona = new Persona("Maria",29,"Femenino");
+				c.sendObject(persona, 6003);
 			}
-			*/
+			else if(sentenceConsole.equalsIgnoreCase("recibirNombre"))
+			{
+				Persona persona = (Persona) c.getObject();
+				System.out.println("Nombre: "+persona.getNombre());
+			}
+			else if(sentenceConsole.equalsIgnoreCase("recibirEdad"))
+			{
+				Persona persona = (Persona) c.getObject();
+				System.out.println("Edad: "+persona.getEdad());
+			}
+			else if(sentenceConsole.equalsIgnoreCase("recibirSexo"))
+			{
+				Persona persona = (Persona) c.getObject();
+				System.out.println("Sexo: "+persona.getSexo());
+			}
+			
 		}
 
 	}

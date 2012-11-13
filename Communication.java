@@ -8,6 +8,7 @@ public class Communication implements Runnable
 	private ArrayList<Integer> nodos;
 	private ServerSocket welcomeSocket;
 	private Object objetoRecibido;
+	private boolean envioDeObjeto = false; 
 
 	public Communication(int id) throws Exception
 	{
@@ -112,6 +113,7 @@ public class Communication implements Runnable
 	//al que se desea mandar.
 	public void sendObject(Object object, int idDestino) throws Exception
 	{
+		sendMessage("4", idDestino);
 		//Si el nodo de destino esta dentro de la lista de nodos...
 		if(nodos.contains(idDestino))
 		{
@@ -188,57 +190,66 @@ public class Communication implements Runnable
 			while(true) { 
 				welcomeSocket.setSoTimeout(0);
 				Socket connectionSocket = welcomeSocket.accept();
-				BufferedReader inFromClient = 
-						new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));				
-				clientSentence = inFromClient.readLine();
-
-				try
-				{
-					if(Integer.parseInt(clientSentence.substring(0,4))!=id)
+				
+				if(!envioDeObjeto){
+					BufferedReader inFromClient = 
+							new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));				
+					clientSentence = inFromClient.readLine();
+	
+					try
 					{
-						//[Solicitud llegada] Llegada de un nuevo Nodo, debemos responder su solicitud y enviar la actual lista de nodos
-						if(clientSentence.substring(5, 6).compareTo("0") == 0)
-						{	
-							int nuevoID = Integer.parseInt(clientSentence.substring(0,4));
-							sendMessage("1"+"_"+listaNodosToString(), nuevoID); //1 = Llegada Aceptada
-							System.out.println("Se ha agregado el nodo "+nuevoID+" a la red");
-						}
-						//[Llegada aceptada] Me responden la solicitud de llegada
-						if(clientSentence.substring(5, 6).compareTo("1") == 0)
-						{	
-							System.out.println("Te has unido a "+clientSentence.substring(0,4));
-							getListaNodos(clientSentence.substring(7));
-							nodos.add(id);
-							updateEveryonesList();
-						}
-						//[Mensaje normal] Lo imprime en consola
-						else if(clientSentence.substring(5, 6).compareTo("2") == 0)
-						{	
-							System.out.println("From "+clientSentence.substring(0, 4)+": "+clientSentence.substring(7));
-						}
-						//[Update de la lista] Invoca el metodo pertinente
-						else if(clientSentence.substring(5, 6).compareTo("3") == 0)
-						{	
-							updateList(clientSentence.substring(7));
+						if(Integer.parseInt(clientSentence.substring(0,4))!=id)
+						{
+							//[Solicitud llegada] Llegada de un nuevo Nodo, debemos responder su solicitud y enviar la actual lista de nodos
+							if(clientSentence.substring(5, 6).compareTo("0") == 0)
+							{	
+								int nuevoID = Integer.parseInt(clientSentence.substring(0,4));
+								sendMessage("1"+"_"+listaNodosToString(), nuevoID); //1 = Llegada Aceptada
+								System.out.println("Se ha agregado el nodo "+nuevoID+" a la red");
+							}
+							//[Llegada aceptada] Me responden la solicitud de llegada
+							if(clientSentence.substring(5, 6).compareTo("1") == 0)
+							{	
+								System.out.println("Te has unido a "+clientSentence.substring(0,4));
+								getListaNodos(clientSentence.substring(7));
+								nodos.add(id);
+								updateEveryonesList();
+							}
+							//[Mensaje normal] Lo imprime en consola
+							else if(clientSentence.substring(5, 6).compareTo("2") == 0)
+							{	
+								System.out.println("From "+clientSentence.substring(0, 4)+": "+clientSentence.substring(7));
+							}
+							//[Update de la lista] Invoca el metodo pertinente
+							else if(clientSentence.substring(5, 6).compareTo("3") == 0)
+							{	
+								updateList(clientSentence.substring(7));
+							}
+							//primeramente para enviar objeto
+							else if(clientSentence.substring(5, 6).compareTo("4") == 0)
+							{	
+								envioDeObjeto = true;
+							}
 						}
 					}
+					catch(IllegalArgumentException e)
+					{
+						System.out.println("Error en el formato del mensaje");
+					}
 				}
-				catch(IllegalArgumentException e)
-				{
-					System.out.println("Error en el formato del mensaje");
-				}
-
-				//Recibimos objeto
-				try
-				{
-					ObjectInputStream oi = new ObjectInputStream(connectionSocket.getInputStream());
-					MyTest prueba = (MyTest)objetoRecibido;
-					int numeroPrueba = prueba.getNumero();
-
-				}
-				catch(IOException ioe)
-				{
-
+				else{
+					//Recibimos objeto
+					envioDeObjeto = false;
+					try
+					{
+						ObjectInputStream oi = new ObjectInputStream(connectionSocket.getInputStream());
+						objetoRecibido = oi.readObject();
+	
+					}
+					catch(IOException ioe)
+					{
+	
+					}
 				}
 			} 
 		}
