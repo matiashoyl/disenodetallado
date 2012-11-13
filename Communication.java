@@ -2,13 +2,14 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Comunication implements Runnable
+public class Communication implements Runnable
 {
 	private int id;
 	private ArrayList<Integer> nodos;
 	private ServerSocket welcomeSocket;
+	private Object objetoRecibido;
 
-	public Comunication(int id) throws Exception
+	public Communication(int id) throws Exception
 	{
 		nodos = new ArrayList<Integer>();
 		this.id = id;		
@@ -97,6 +98,37 @@ public class Comunication implements Runnable
 			catch(ConnectException e)
 			{
 				System.out.println("No fue posible enviar el mensaje");
+			}
+		}
+		else
+			System.out.println("El nodo "+idDestino+" no está conectado");
+	}
+
+	public void sendToAll(Object object)
+	{
+		//Manda el objeto a todos los de la lista
+	}
+	//Método que envía objetos. Recibe como input el objeto que se desea enviar y el id del nodo
+	//al que se desea mandar.
+	public void sendObject(Object object, int idDestino) throws Exception
+	{
+		//Si el nodo de destino esta dentro de la lista de nodos...
+		if(nodos.contains(idDestino))
+		{
+			try
+			{
+				Socket clientSocket = new Socket("127.0.0.1", idDestino);
+
+				ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+				outToServer.writeObject(object);
+				outToServer.flush();
+
+				clientSocket.close(); 
+			}
+			catch(ConnectException e)
+			{
+				System.out.println("No fue posible enviar el objeto");
 			}
 		}
 		else
@@ -195,11 +227,29 @@ public class Comunication implements Runnable
 				{
 					System.out.println("Error en el formato del mensaje");
 				}
+
+				//Recibimos objeto
+				try
+				{
+					ObjectInputStream oi = new ObjectInputStream(connectionSocket.getInputStream());
+					MyTest prueba = (MyTest)objetoRecibido;
+					int numeroPrueba = prueba.getNumero();
+
+				}
+				catch(IOException ioe)
+				{
+
+				}
 			} 
 		}
 		catch (Exception e) 
 		{
 			System.out.println("Error al recibir el mensaje");
 		}
+	}
+
+	public Object getObject()
+	{
+		return objetoRecibido;
 	}
 }

@@ -4,23 +4,46 @@ import java.io.InputStreamReader;
 public class Main {
 	public static void main(String[] args) throws Exception {
 		
-		//Creamos un nuevo comunicador pasándole como parámetro su id
-		Comunication c = new Comunication(6005);
-		//Comenzamos el thread que levantará el servidor
+		Communication c = new Communication(6005);
 		new Thread(c).start();
-		//Intentamos conectarnos a la sesión
 		c.connectToSession();
 		
-		//Loop infinito que recibe input del teclado y lo envía al nodo indicado
 		while(true)
 		{
+			/* Prueba para probar como se envian los mensajes
+			 * El Command Line esta constantemente esperando input
+			 * y lo envia al nodo especificado a traves del metodo
+			 * senMessage (Para probar se debe descomentar y comentar el resto)
+			 */
 			BufferedReader inFromUser = 
 					new BufferedReader(new InputStreamReader(System.in));
 
 			String sentenceConsole = inFromUser.readLine();
 			
-			//Ejemplo de uso del metodo para enviar mensaje. El número dos indica el caracter de mensaje normal
 			c.sendMessage("2_"+sentenceConsole, 6003);
+			
+			
+			/* Prueba para probar como se envian los objetos
+			 *  (Para probar se debe descomentar y comentar el resto)
+			 */
+			/*
+			BufferedReader inFromUser = 
+					new BufferedReader(new InputStreamReader(System.in));
+
+			String sentenceConsole = inFromUser.readLine();
+			
+			if(sentenceConsole.equalsIgnoreCase("enviar"))
+			{
+				MyTest test = new MyTest();
+				c.sendObject(test, 6003);
+			}
+			else if(sentenceConsole.equalsIgnoreCase("recibir"))
+			{
+				MyTest test = (MyTest)c.getObject();
+				System.out.println("Si el numero es 60, entonces esta funcionando.");
+				System.out.println("Numero: "+test.getNumero());
+			}
+			*/
 		}
 
 	}
