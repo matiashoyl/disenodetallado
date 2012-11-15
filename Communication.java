@@ -104,10 +104,14 @@ public class Communication implements Runnable
 		else
 			System.out.println("El nodo "+idDestino+" no está conectado");
 	}
-
-	public void sendToAll(Object object)
+	
+	//Manda el objeto a todos los de la lista
+	public void sendToAll(Object object) throws Exception
 	{
-		//Manda el objeto a todos los de la lista
+		for(int n : nodos)
+		{
+			sendObject(object, n);
+		}
 	}
 	//Método que envía objetos. Recibe como input el objeto que se desea enviar y el id del nodo
 	//al que se desea mandar.
