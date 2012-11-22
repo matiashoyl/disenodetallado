@@ -1,13 +1,15 @@
 import java.io.*; 
 import java.net.*;
 import java.util.*;
+import communication.UMMessage;
+import communication.UserManager;
 
 public class Communication implements Runnable
 {
 	private int id;
 	private ArrayList<Integer> nodos;
 	private ServerSocket welcomeSocket;
-	private Object objetoRecibido;
+	//private Object objetoRecibido;
 	private boolean envioDeObjeto = false; 
 
 	public Communication(int id) throws Exception
@@ -117,6 +119,7 @@ public class Communication implements Runnable
 	//al que se desea mandar.
 	public void sendObject(Object object, int idDestino) throws Exception
 	{
+		
 		sendMessage("4", idDestino);
 		//Si el nodo de destino esta dentro de la lista de nodos...
 		if(nodos.contains(idDestino))
@@ -171,6 +174,10 @@ public class Communication implements Runnable
 		{
 			nodos.add(Integer.parseInt(split[i]));
 		}
+	}
+
+	public ArrayList<Integer> getNodos() {
+		return nodos;
 	}
 
 	//Método para desconectar el nodo de la red. Elimina el id del nodo de la lista y luego
@@ -247,7 +254,12 @@ public class Communication implements Runnable
 					try
 					{
 						ObjectInputStream oi = new ObjectInputStream(connectionSocket.getInputStream());
-						objetoRecibido = oi.readObject();
+						Object objetoRecibido = oi.readObject();
+						
+						if((UMMessage) objetoRecibido != null)
+						{
+							UserManager.getInstance().recieveMessage((UMMessage) objetoRecibido);
+						}
 	
 					}
 					catch(IOException ioe)
@@ -262,9 +274,10 @@ public class Communication implements Runnable
 			System.out.println("Error al recibir el mensaje");
 		}
 	}
-
+/*
 	public Object getObject()
 	{
 		return objetoRecibido;
 	}
+	*/
 }

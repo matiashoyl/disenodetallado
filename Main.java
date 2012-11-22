@@ -48,6 +48,7 @@ public class Main {
 				Persona persona = new Persona("Maria",29,"Femenino");
 				c.sendObject(persona, 6003);
 			}
+			/*
 			else if(sentenceConsole.equalsIgnoreCase("recibirNombre"))
 			{
 				Persona persona = (Persona) c.getObject();
@@ -62,7 +63,7 @@ public class Main {
 			{
 				Persona persona = (Persona) c.getObject();
 				System.out.println("Sexo: "+persona.getSexo());
-			}
+			}*/
 			
 		}
 
